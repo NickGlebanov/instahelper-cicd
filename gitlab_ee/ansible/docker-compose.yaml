@@ -1,10 +1,10 @@
 gitlab:
   image: 'gitlab/gitlab-ee:latest'
   restart: always
-  hostname: 'git.diplomproj.ru'
+  hostname: 'ci.diplomproj.ru'
   environment:
     GITLAB_OMNIBUS_CONFIG: |
-      external_url 'http://git.diplomproj.ru/'
+      external_url 'http://ci.diplomproj.ru/'
   ports:
     - '80:80'
     - '443:443'
