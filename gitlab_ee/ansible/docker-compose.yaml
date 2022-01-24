@@ -3,6 +3,8 @@ gitlab:
   restart: always
   hostname: 'ci.diplomproj.ru'
   environment:
+    GITLAB_ROOT_EMAIL: "n.n.glebanov@yandex.ru"
+    GITLAB_ROOT_PASSWORD: "password"
     GITLAB_OMNIBUS_CONFIG: |
       external_url 'http://ci.diplomproj.ru/'
   ports:
