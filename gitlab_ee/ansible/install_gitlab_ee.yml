@@ -1,0 +1,42 @@
+---
+- name: Install gitlab playbook
+  hosts: cicd_server
+  roles:
+    - updateserver
+    - installdocker
+    - installdockercompose
+  remote_user: root
+  become: yes
+  post_tasks:
+    - name: Create a directory gitlab
+      file:
+        path: /usr/local/gitlab
+        state: directory
+        mode: '0777'
+
+    - name: Create a docker volumes for gitlab ee
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0770'
+      with_items:
+        - /data/service-data/gitlab/config
+        - /data/service-data/gitlab/logs
+        - /data/service-data/gitlab/data
+
+    - name: Copy docker-compose.yml to host
+      copy:
+        src: docker-compose.yaml
+        dest: /usr/local/gitlab/docker-compose.yaml
+        owner: root
+        group: root
+        mode: '0777'
+
+    - name: Up GitLab EE
+      command: /usr/local/bin/docker-compose up -d
+      args:
+        chdir: "/usr/local/gitlab"
+
+
+
+
