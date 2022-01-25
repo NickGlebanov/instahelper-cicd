@@ -3,7 +3,9 @@
   hosts: runners
   remote_user: ubuntu
   become: yes
-  tasks:
+  roles:
+    - installdocker
+  post_tasks:
 
     - name: Include vars
       include_vars: myvars.yaml
@@ -42,9 +44,10 @@
           --non-interactive
           --url "{{ gitlab_url }}"
           --registration-token "{{ gitlab_token }}"
-          --executor "shell"
-          --description "shell-runner"
-          --tag-list "shell-aws"
+          --executor "docker"
+          --docker-image alpine:latest
+          --description "docker-runner"
+          --tag-list "docker-aws"
           --run-untagged="true"
           --locked="false"
           --access-level="not_protected"
