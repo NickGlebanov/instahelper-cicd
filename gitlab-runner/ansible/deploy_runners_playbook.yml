@@ -5,6 +5,7 @@
   become: yes
   roles:
     - installdocker
+    - installdockercompose
   post_tasks:
 
     - name: Include vars
