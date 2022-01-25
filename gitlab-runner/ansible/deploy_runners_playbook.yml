@@ -1,0 +1,56 @@
+---
+- name: Install runner
+  hosts: runners
+  remote_user: ubuntu
+  become: yes
+  tasks:
+
+    - name: Include vars
+      include_vars: myvars.yaml
+
+    - name: Create a directory gitlab
+      file:
+        path: /usr/local/gitlab
+        state: directory
+        mode: '0777'
+
+    - name: Add the user gitlab-runner
+      user:
+        name: gitlab-runner
+        create_home: yes
+        shell: /bin/bash
+
+    - name: Download runner
+      get_url:
+        url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+        dest: /usr/local/bin/gitlab-runner
+        mode: '+x'
+
+    - name: Install runner
+      command: gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+      args:
+        chdir: /usr/local/bin
+
+    - name: Start runner
+      command: gitlab-runner start
+      args:
+        chdir: /usr/local/bin
+
+    - name: Register runner
+      command: >
+        gitlab-runner register
+          --non-interactive
+          --url "{{ gitlab_url }}"
+          --registration-token "{{ gitlab_token }}"
+          --executor "shell"
+          --description "shell-runner"
+          --tag-list "shell-aws"
+          --run-untagged="true"
+          --locked="false"
+          --access-level="not_protected"
+      args:
+        chdir: /usr/local/bin
+
+
+
+
