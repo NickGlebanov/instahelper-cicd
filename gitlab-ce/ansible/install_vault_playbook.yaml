@@ -20,4 +20,3 @@
         update_cache: true
         pkg: [ 'vault' ]
         state: present
-
