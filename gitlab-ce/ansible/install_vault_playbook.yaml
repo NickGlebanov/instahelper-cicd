@@ -1,0 +1,23 @@
+---
+- name: Install gitlab playbook
+  hosts: cicd_server
+  remote_user: root
+  become: yes
+  tasks:
+
+    - name: Add vault gpg key
+      apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+
+    - name: Add vault Repository
+      apt_repository:
+        repo: deb [arch=amd64] https://apt.releases.hashicorp.com groovy main
+        state: present
+
+    - name: Install vault
+      apt:
+        update_cache: true
+        pkg: [ 'vault' ]
+        state: present
+
